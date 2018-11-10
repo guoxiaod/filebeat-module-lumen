@@ -1,0 +1,43 @@
+{
+  "description": "Pipeline for parsing lumen user error logs.",
+  "processors": [{
+    "grok": {
+      "field": "message",
+      "patterns":[
+        "%{DATA:lumen.usererror.level}: %{TIMESTAMP_ISO8601:lumen.usererror.time} \\[%{DATA:lumen.usererror.file}:%{NUMBER:lumen.usererror.lineno}\\] errno\\[%{NUMBER:lumen.usererror.errno}\\] logId\\[%{NUMBER:lumen.usererror.log_id}\\] func\\[%{DATA:lumen.usererror.func}\\]\\s+%{GREEDYDATA:lumen.usererror.message} %{URIPATH:lumen.usererror.uri}\\s*"
+      ],
+      "ignore_missing": true
+    }
+  }, {
+    "remove":{
+      "field": "message"
+    }
+  }, {
+    "rename":{
+      "field": "lumen.usererror.message",
+      "target_field": "message"
+    }
+  }, {
+    "rename": {
+      "field": "@timestamp",
+      "target_field": "read_timestamp"
+    }
+  }, {
+    "date": {
+      "field": "lumen.usererror.time",
+      "target_field": "@timestamp",
+      "formats": ["YYYY-MM-dd H:m:s", "YY-MM-dd H:m:s"],
+      "timezone": "Asia/Shanghai"
+    }
+  }, {
+    "remove": {
+      "field": "lumen.usererror.time"
+    }
+  }],
+  "on_failure" : [{
+    "set" : {
+      "field" : "error.message",
+      "value" : "{{ _ingest.on_failure_message }}"
+    }
+  }]
+}

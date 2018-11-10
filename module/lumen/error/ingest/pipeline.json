@@ -1,0 +1,38 @@
+{
+  "description": "Pipeline for parsing the lumen error logs",
+  "processors": [{
+    "grok": {
+      "field": "message",
+      "patterns": [
+        "\\[%{DATA:lumen.error.time}\\] lumen\\.%{DATA:lumen.error.level}: %{GREEDYDATA:lumen.error.message}"
+      ],
+      "ignore_missing": true
+    }
+  },{
+    "remove":{
+      "field": "message"
+    }
+  }, {
+    "rename": {
+      "field": "@timestamp",
+      "target_field": "read_timestamp"
+    }
+  }, {
+    "date": {
+      "field": "lumen.error.time",
+      "target_field": "@timestamp",
+      "formats": ["YYYY-MM-dd H:m:s"],
+      "timezone": "Asia/Shanghai"
+    }
+  }, {
+    "remove": {
+      "field": "lumen.error.time"
+    }
+  }],
+  "on_failure" : [{
+    "set" : {
+      "field" : "error.message",
+      "value" : "{{ _ingest.on_failure_message }}"
+    }
+  }]
+}
