@@ -4,7 +4,8 @@
     "grok": {
       "field": "message",
       "patterns":[
-        "%{DATA:lumen.usererror.level}: %{TIMESTAMP_ISO8601:lumen.usererror.time} \\[%{DATA:lumen.usererror.file}:%{NUMBER:lumen.usererror.lineno}\\] errno\\[%{NUMBER:lumen.usererror.errno}\\] logId\\[%{NUMBER:lumen.usererror.log_id}\\] func\\[%{DATA:lumen.usererror.func}\\]\\s+%{GREEDYDATA:lumen.usererror.message} %{URIPATH:lumen.usererror.uri}\\s*"
+        "%{DATA:lumen.usererror.level}: %{TIMESTAMP_ISO8601:lumen.usererror.time} \\[%{DATA:lumen.usererror.file}:%{NUMBER:lumen.usererror.lineno}\\] errno\\[%{NUMBER:lumen.usererror.errno}\\] logId\\[%{NUMBER:lumen.usererror.log_id}\\] func\\[%{DATA:lumen.usererror.func}\\]\\s+%{GREEDYDATA:lumen.usererror.message} %{URIPATH:lumen.usererror.uri}",
+        "%{DATA:lumen.usererror.level}: %{TIMESTAMP_ISO8601:lumen.usererror.time} \\[%{DATA:lumen.usererror.file}:%{NUMBER:lumen.usererror.lineno}\\] errno\\[%{NUMBER:lumen.usererror.errno}\\] logId\\[%{NUMBER:lumen.usererror.log_id}\\] func\\[%{DATA:lumen.usererror.func}\\]\\s+%{GREEDYDATA:lumen.usererror.message}\\s*"
       ],
       "ignore_missing": true
     }
